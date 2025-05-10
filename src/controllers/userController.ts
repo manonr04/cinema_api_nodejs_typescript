@@ -1,4 +1,4 @@
-import userService from "../services/userService";
+import userService, { getBanlanceAccountByUser } from '../services/userService';
 import { Request, Response } from "express";
 
 export const createUser = async (req: Request, res: Response) => {
@@ -20,6 +20,12 @@ export const getOneUser = async (req: Request, res: Response) => {
   res.json(result);
 };
 
+export const getAccountBalanceUser = async (req: Request, res: Response) => {
+  console.log(req.params)
+  const result = await userService.getBanlanceAccountByUser(req.params.id);
+  res.json(result);
+};
+
 export const updateUser = async (req: Request, res: Response) => {
   const result = await userService.updateUser(req.params.id, req.body);
   res.json(result);
@@ -36,4 +42,5 @@ export default {
   createUser,
   updateUser,
   removeUser,
+  getAccountBalanceUser
 }

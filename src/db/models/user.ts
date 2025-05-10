@@ -8,6 +8,7 @@ export class User extends Model {
   role!: string[];
   firstName!: string;
   lastName!: string;
+  accountBalance!: number;
   createdAt!: Date;
   updatedAt!: Date;
 }
@@ -41,6 +42,11 @@ User.init({
     type: DataTypes.STRING,
     allowNull: false,
     field: 'last_name',
+  },
+  accountBalance: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    field: 'account_balance',
   },
   createdAt: {
     type: DataTypes.DATE,

@@ -2,6 +2,7 @@ import './db/models/room';
 import './db/models/user';
 import './db/models/seance';
 import './db/models/movie';
+import './db/models/transaction';
 
 import express from 'express';
 import cors from 'cors';
@@ -14,6 +15,7 @@ import roomRoutes from './routes/roomRoutes';
 import movieRoutes from './routes/movieRoutes';
 import userRoutes from './routes/userRoutes';
 import seancesRoutes from './routes/seanceRoutes';
+import transactionRoutes from './routes/transactionRoutes';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -32,6 +34,8 @@ app.use('/api/rooms', roomRoutes);
 app.use('/api/movies', movieRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/seances', seancesRoutes);
+app.use('/api/transactions', transactionRoutes);
+
 
 // Health check
 app.get('/health', (req, res) => {

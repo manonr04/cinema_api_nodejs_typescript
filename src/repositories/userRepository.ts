@@ -5,6 +5,14 @@ export const findAllUser = () => User.findAll();
 export const findUserById = (id: string | number) =>
   User.findByPk(id);
 
+export const getBalanceAccountByUserId = async (id: string | number) => {
+  const user = await User.findByPk(id);
+  if (!user) {
+    throw new Error("Utilisateur introuvable");
+  }
+  return user.accountBalance;
+};
+
 export const createUser = (data: Partial<User>) =>
   User.create(data);
 
@@ -20,4 +28,5 @@ export default {
   createUser,
   updateUser,
   removeUser,
+  getBalanceAccountByUserId
 }

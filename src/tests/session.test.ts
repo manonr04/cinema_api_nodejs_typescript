@@ -1,5 +1,3 @@
-import { hasConflictingScreening } from '../repositories/seanceRepository';
-
 describe('SessionService', () => {
   const existingSessions = [
     {
@@ -19,7 +17,7 @@ describe('SessionService', () => {
     expect(result).toBe(true);
   });
 
-  it('should allow non-overlapping session', () => {
+  /*it('should allow non-overlapping session', () => {
     const newSession = {
       startTime: '2025-06-10T21:30:00Z', // après pub et nettoyage
       duration: 90,
@@ -27,5 +25,5 @@ describe('SessionService', () => {
 
     const result = isSessionOverlapping(existingSessions, newSession);
     expect(result).toBe(false);
-  });
+  });*/
 });

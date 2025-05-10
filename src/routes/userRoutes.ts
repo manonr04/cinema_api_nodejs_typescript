@@ -82,6 +82,8 @@ router.get('/', userController.getAllUser);
  */
 router.get('/:id', userController.getOneUser);
 
+router.get('/balance/:id', userController.getAccountBalanceUser);
+
 /**
  * @swagger
  * /api/users:
