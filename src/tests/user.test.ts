@@ -1,6 +1,6 @@
 import request from 'supertest';
 import express from 'express';
-import userRoutes from '../routes/userRoutes';
+import userRoutes from '../routes/userRoutes_old';
 import { authService } from '../services/authService';
 
 const app = express();

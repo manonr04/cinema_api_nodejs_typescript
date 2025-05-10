@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 
 export const createSeance = async (req: Request, res: Response) => {
   try {
+    console.log(req.body);
     const result = await service.createSeance(req.body);
     res.status(201).json(result);
   } catch (err: any) {
@@ -20,12 +21,12 @@ export const getOneSeance = async (req: Request, res: Response) => {
   res.json(result);
 };
 
-export const updateSeance = async (req: Request, res: Response) => {
-  const result = await service.updateSeance(Number(req.params.id), req.body);
+/*export const updateSeance = async (req: Request, res: Response) => {
+  const result = await service.updateSeance(req.params.id, req.body);
   res.json(result);
 };
 
 export const removeSeance = async (req: Request, res: Response) => {
-  await service.removeSeance(Number(req.params.id));
+  await service.removeSeance(req.params.id);
   res.status(204).end();
-};
+};*/

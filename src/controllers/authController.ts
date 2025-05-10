@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import { authService } from '../services/authService';
-import { userService } from '../services/userService';
+import { userService } from '../services/userService_old';
 
 export const register = async (req: Request, res: Response) => {
   try {

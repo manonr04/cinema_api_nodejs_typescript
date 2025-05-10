@@ -1,19 +1,30 @@
 import * as repo from "../repositories/seanceRepository"
-import Movie from "../db/models/movie";
+import * as movieService from '../services/movieService';
 
 export const createSeance = async (data: any) => {
-  // pas find pas pk mais par name ?
-  const movie = await Movie.findByPk(data.movie_id);
+  const movie = await movieService.getMovieById(data.movieId);
   if (!movie) throw new Error("Film introuvable");
 
-  const duration = movie.duration + 30;
-  const end_time = new Date(new Date(data.start_time).getTime() + duration * 60000);
+  const startTime = new Date(data.startTime);
 
-  const hasConflict = await repo.hasConflictingScreening(data.room_id, new Date(data.start_time), end_time);
+  const startHour = startTime.getHours();
+  if (startHour < 9 || startHour >= 20) {
+    throw new Error("La séance doit être entre 9h et 20h.");
+  }
+
+  const duration = movie.duration + 30;
+  const endIime = new Date(startTime.getTime() + duration * 60000);
+  console.log(endIime.toISOString());
+
+  const hasConflict = await repo.hasConflictingScreeningInOneRoom(data.roomId, startTime, endIime);
   if (hasConflict) throw new Error("Conflit avec une autre séance");
 
-  return repo.createSeance({ ...data, end_time });
+  const hasConflitWithOtherRoom = await repo.hasConflictingScreeningForSameMovie(data.movieId, startTime, endIime);
+  if (hasConflitWithOtherRoom) throw new Error("Conflit avec une autre salle");
+
+  return repo.createSeance({ ...data, endIime });
 };
+
 
 export const getSeance = (filters: any) => {
   return repo.findAllSeances(filters);

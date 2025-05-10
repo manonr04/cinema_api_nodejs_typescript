@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import userController from '../controllers/userController';
+import { userController_old } from '../controllers/userController_old';
+import { authenticateToken } from '../middleware/authMiddleware';
 
 const router = Router();
 
@@ -33,6 +34,11 @@ const router = Router();
  *         updatedAt:
  *           type: string
  *           format: date-time
+ *   securitySchemes:
+ *     bearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
  */
 
 /**
@@ -41,6 +47,8 @@ const router = Router();
  *   get:
  *     summary: Récupère tous les utilisateurs
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Liste des utilisateurs
@@ -50,10 +58,10 @@ const router = Router();
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/User'
- *       400:
- *         description: Requête invalide
+ *       401:
+ *         description: Non autorisé
  */
-router.get('/', userController.getAllUser);
+router.get('/', authenticateToken, userController_old.getAllUsers);
 
 /**
  * @swagger
@@ -61,6 +69,8 @@ router.get('/', userController.getAllUser);
  *   get:
  *     summary: Récupère un utilisateur par son ID
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -75,12 +85,12 @@ router.get('/', userController.getAllUser);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
- *       400:
- *         description: ID invalide
+ *       401:
+ *         description: Non autorisé
  *       404:
  *         description: Utilisateur non trouvé
  */
-router.get('/:id', userController.getOneUser);
+router.get('/:id', authenticateToken, userController_old.getUserById);
 
 /**
  * @swagger
@@ -88,6 +98,8 @@ router.get('/:id', userController.getOneUser);
  *   post:
  *     summary: Crée un nouvel utilisateur
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -99,8 +111,10 @@ router.get('/:id', userController.getOneUser);
  *         description: Utilisateur créé avec succès
  *       400:
  *         description: Données invalides
+ *       401:
+ *         description: Non autorisé
  */
-router.post('/', userController.createUser);
+router.post('/', authenticateToken, userController_old.createUser);
 
 /**
  * @swagger
@@ -108,6 +122,8 @@ router.post('/', userController.createUser);
  *   put:
  *     summary: Met à jour un utilisateur
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -128,13 +144,13 @@ router.post('/', userController.createUser);
  *                 type: string
  *     responses:
  *       200:
- *         description: Utilisateur mis à jour avec succès
- *       400:
- *         description: Données invalides
+ *         description: Utilisateur mis à jour
+ *       401:
+ *         description: Non autorisé
  *       404:
  *         description: Utilisateur non trouvé
  */
-router.put('/:id', userController.updateUser);
+router.put('/:id', authenticateToken, userController_old.updateUser);
 
 /**
  * @swagger
@@ -142,6 +158,8 @@ router.put('/:id', userController.updateUser);
  *   delete:
  *     summary: Supprime un utilisateur
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -151,12 +169,13 @@ router.put('/:id', userController.updateUser);
  *         description: ID de l'utilisateur
  *     responses:
  *       204:
- *         description: Utilisateur supprimé avec succès
- *       400:
- *         description: ID invalide
+ *         description: Utilisateur supprimé
+ *       401:
+ *         description: Non autorisé
  *       404:
  *         description: Utilisateur non trouvé
  */
-router.delete('/:id', userController.removeUser);
+router.delete('/:id', authenticateToken, userController_old.deleteUser);
 
-export default router;
+
+export default router; 

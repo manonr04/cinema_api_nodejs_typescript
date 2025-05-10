@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import logger from '../config/logger';
-import { userService } from './userService';
+import { userService } from './userService_old';
 
 // Clés secrètes pour les tokens (à déplacer dans un fichier .env en production)
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';

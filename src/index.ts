@@ -1,15 +1,19 @@
 import './db/models/room';
+import './db/models/user';
+import './db/models/seance';
+import './db/models/movie';
 
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger';
-import userRoutes from './routes/userRoutes';
 import authRoutes from './routes/authRoutes';
 import { sequelize } from './db/sequelize';
 import roomRoutes from './routes/roomRoutes';
 import movieRoutes from './routes/movieRoutes';
+import userRoutes from './routes/userRoutes';
+import seancesRoutes from './routes/seanceRoutes';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -22,10 +26,12 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Routes
 
-app.use('/api/users', userRoutes);
+//app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/movies', movieRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/seances', seancesRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

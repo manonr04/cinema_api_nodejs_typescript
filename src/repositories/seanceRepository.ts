@@ -11,6 +11,7 @@ export const findSeanceById = (id: number) => {
 }
 
 export const createSeance = (data: any) => {
+  console.log(data);
   return Screening.create(data);
 }
 
@@ -22,8 +23,8 @@ export const removeSeance = (id: number) => {
   return Screening.destroy({ where: { id } });
 }
 
-export const hasConflictingScreening = async (
-  roomId: string,
+export const hasConflictingScreeningInOneRoom = async (
+  roomId: number,
   startTime: Date,
   endTime: Date
 ) => {
@@ -56,10 +57,47 @@ export const hasConflictingScreening = async (
   return !!conflict;
 };
 
+export const hasConflictingScreeningForSameMovie = async (
+  movieId: number,
+  startTime: Date,
+  endTime: Date
+): Promise<boolean> => {
+  const conflict = await ScreeningModel.findOne({
+    where: {
+      movieId,
+      [Op.or]: [
+        {
+          startTime: {
+            [Op.between]: [startTime, endTime],
+          },
+        },
+        {
+          endTime: {
+            [Op.between]: [startTime, endTime],
+          },
+        },
+        {
+          startTime: {
+            [Op.lte]: startTime,
+          },
+          endTime: {
+            [Op.gte]: endTime,
+          },
+        },
+      ],
+    },
+  });
+
+  return !!conflict;
+};
+
+
 export default {
   findAllSeances,
   findSeanceById,
   createSeance,
   updateSeance,
-  removeSeance
+  removeSeance,
+  hasConflictingScreeningInOneRoom,
+  hasConflictingScreeningForSameMovie
 }
