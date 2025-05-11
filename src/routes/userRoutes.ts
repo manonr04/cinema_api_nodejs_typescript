@@ -1,7 +1,8 @@
-import { Router } from 'express';
+import express from 'express';
 import userController from '../controllers/userController';
+import { requireAuth, requireAdmin } from '../middlewares/authMiddleware';
 
-const router = Router();
+const router = express.Router();
 
 /**
  * @swagger
@@ -53,7 +54,7 @@ const router = Router();
  *       400:
  *         description: Requête invalide
  */
-router.get('/', userController.getAllUser);
+router.get('/', requireAuth, requireAdmin, userController.getAllUser);
 
 /**
  * @swagger
@@ -80,7 +81,7 @@ router.get('/', userController.getAllUser);
  *       404:
  *         description: Utilisateur non trouvé
  */
-router.get('/:id', userController.getOneUser);
+router.get('/:id', requireAuth, requireAdmin, userController.getOneUser);
 
 router.get('/balance/:id', userController.getAccountBalanceUser);
 
@@ -102,7 +103,7 @@ router.get('/balance/:id', userController.getAccountBalanceUser);
  *       400:
  *         description: Données invalides
  */
-router.post('/', userController.createUser);
+router.post('/', requireAuth, requireAdmin, userController.createUser);
 
 /**
  * @swagger
@@ -136,7 +137,7 @@ router.post('/', userController.createUser);
  *       404:
  *         description: Utilisateur non trouvé
  */
-router.put('/:id', userController.updateUser);
+router.put('/:id', requireAuth, requireAdmin, userController.updateUser);
 
 /**
  * @swagger
@@ -159,6 +160,6 @@ router.put('/:id', userController.updateUser);
  *       404:
  *         description: Utilisateur non trouvé
  */
-router.delete('/:id', userController.removeUser);
+router.delete('/:id', requireAuth, requireAdmin, userController.removeUser);
 
 export default router;

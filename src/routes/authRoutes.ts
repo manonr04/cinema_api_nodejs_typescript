@@ -1,6 +1,8 @@
 import express from 'express';
 import { body } from 'express-validator';
 import { login, register, authController } from '../controllers/authController';
+import { Request, Response } from 'express';
+import { authService } from '../services/authService';
 
 const router = express.Router();
 
@@ -99,7 +101,7 @@ router.post(
  * @swagger
  * /api/auth/refresh:
  *   post:
- *     summary: Rafraîchir un token d'accès
+ *     summary: Rafraîchir les tokens d'authentification
  *     tags: [Auth]
  *     requestBody:
  *       required: true
@@ -112,13 +114,58 @@ router.post(
  *             properties:
  *               refreshToken:
  *                 type: string
+ *                 description: Le refresh token actuel
  *     responses:
  *       200:
- *         description: Nouveau token d'accès généré
- *       403:
+ *         description: Tokens rafraîchis avec succès
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   description: Nouveau token d'accès
+ *                 refreshToken:
+ *                   type: string
+ *                   description: Nouveau refresh token
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     roles:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *       401:
  *         description: Refresh token invalide ou expiré
  */
-router.post('/refresh', authController.refreshToken);
+router.post('/refresh', async (req: Request, res: Response) => {
+  try {
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      return res.status(400).json({ message: 'Refresh token manquant' });
+    }
+
+    const result = await authService.refreshTokens(refreshToken);
+    res.json(result);
+  } catch (error: any) {
+    if (error.message === 'Refresh token expired') {
+      return res.status(401).json({ 
+        message: 'Refresh token expiré',
+        code: 'REFRESH_TOKEN_EXPIRED'
+      });
+    }
+    return res.status(401).json({ 
+      message: 'Refresh token invalide',
+      code: 'INVALID_REFRESH_TOKEN'
+    });
+  }
+});
 
 /**
  * @swagger

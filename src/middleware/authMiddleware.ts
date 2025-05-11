@@ -44,7 +44,11 @@ export const authenticateToken = (
     next();
   } catch (error) {
     logger.warn(`Token invalide ou expiré: ${error instanceof Error ? error.message : 'Unknown error'}`);
-    res.status(403).json({ message: 'Token invalide ou expiré' });
+    if (error instanceof jwt.TokenExpiredError) {
+      res.status(401).json({ error: 'TOKEN_EXPIRED' });
+    } else {
+      res.status(401).json({ error: 'TOKEN_INVALID' });
+    }
   }
 };
 

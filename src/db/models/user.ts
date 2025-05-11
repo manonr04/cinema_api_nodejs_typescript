@@ -5,7 +5,7 @@ export class User extends Model {
   id!: string;
   email!: string;
   password!: string;
-  role!: string[];
+  roles!: string[];
   firstName!: string;
   lastName!: string;
   accountBalance!: number;
@@ -32,6 +32,7 @@ User.init({
   roles: {
     type: DataTypes.ARRAY(DataTypes.STRING),
     allowNull: false,
+    defaultValue: ['user']
   },
   firstName: {
     type: DataTypes.STRING,
@@ -47,6 +48,7 @@ User.init({
     type: DataTypes.INTEGER,
     allowNull: false,
     field: 'account_balance',
+    defaultValue: 0
   },
   createdAt: {
     type: DataTypes.DATE,

@@ -5,6 +5,9 @@ export const findAllUser = () => User.findAll();
 export const findUserById = (id: string | number) =>
   User.findByPk(id);
 
+export const findByEmail = (email: string) =>
+  User.findOne({ where: { email } });
+
 export const getBalanceAccountByUserId = async (id: string | number) => {
   const user = await User.findByPk(id);
   if (!user) {
@@ -28,5 +31,6 @@ export default {
   createUser,
   updateUser,
   removeUser,
-  getBalanceAccountByUserId
+  getBalanceAccountByUserId,
+  findByEmail
 }

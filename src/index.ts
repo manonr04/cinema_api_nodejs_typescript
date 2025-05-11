@@ -25,10 +25,6 @@ app.use(cors());
 app.use(express.json());
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-// Routes
-
-//app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/rooms', roomRoutes);
 app.use('/api/movies', movieRoutes);
@@ -37,12 +33,10 @@ app.use('/api/seances', seancesRoutes);
 app.use('/api/transactions', transactionRoutes);
 
 
-// Health check
 app.get('/health', (req, res) => {
   res.json({ status: 'OK' });
 });
 
-// Start server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
   console.log(`API Documentation available at http://localhost:${port}/api-docs`);
@@ -52,7 +46,6 @@ app.listen(port, () => {
   try {
     await sequelize.authenticate();
     console.log("Connexion à la DB OK");
-
     await sequelize.sync({ alter: true });
     console.log("Modèles synchronisés");
   } catch (e) {

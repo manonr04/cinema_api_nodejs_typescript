@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
 import { authService } from '../services/authService';
-import { userService } from '../services/userService_old';
+import userService from '../services/userService';
 
 export const register = async (req: Request, res: Response) => {
   try {
@@ -10,14 +10,14 @@ export const register = async (req: Request, res: Response) => {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email, password, firstName, lastName, username } = req.body;
+    const { email, password, firstName, lastName, username, roles } = req.body;
 
     if (!email || !password || !firstName || !lastName || !username) {
       return res.status(400).json({ message: 'Tous les champs sont requis' });
     }
 
     try {
-      const result = await authService.register(email, password, firstName, lastName, username);
+      const result = await authService.register(email, password, firstName, lastName, username, roles);
       res.status(201).json(result);
     } catch (error: any) {
       if (error.message === 'User already exists') {
@@ -56,9 +56,9 @@ export const login = async (req: Request, res: Response) => {
       res.json({
         user: {
           id: result.user.id,
-          username: result.user.username,
+          lastName: result.user.lastName,
           email: result.user.email,
-          role: result.user.role
+          roles: result.user.roles
         },
         token: result.token
       });
@@ -94,7 +94,7 @@ export const authController = {
     }
 
     // Récupérer l'ID de l'utilisateur à partir du refresh token
-    const userId = authService.getUserIdFromRefreshToken(refreshToken);
+    const userId: string | null = authService.getUserIdFromRefreshToken(refreshToken);
     if (!userId) {
       res.status(403).json({ message: 'Refresh token invalide' });
       return;
